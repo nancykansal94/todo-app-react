@@ -6,7 +6,7 @@ export default function Dropdown({ options, selected, onSelected }) {
 
   return (
     <div
-      className="select"
+      className="dropdown"
       onClick={() => {
         setIsOpen((curr) => !curr);
       }}

@@ -1,8 +1,12 @@
 export default function Footer({ onClearCompletedTodo, onClearAllTodo }) {
   return (
-    <div>
-      <button onClick={onClearCompletedTodo}>Clear all completed todos</button>
-      <button onClick={onClearAllTodo}>Clear all todos</button>
+    <div className="clearBtn-container">
+      <button className="clearBtn" onClick={onClearCompletedTodo}>
+        Clear completed
+      </button>
+      <button className="clearBtn" onClick={onClearAllTodo}>
+        Clear all
+      </button>
     </div>
   );
 }

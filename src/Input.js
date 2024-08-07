@@ -10,12 +10,14 @@ export default function Input({
   return (
     <form onSubmit={handleSubmit}>
       <input
+        className="todoInput"
         type="text"
+        autoFocus
         value={currentTodo}
         onChange={(e) => onCurrentTodoChanged(e.target.value)}
-        placeholder="Enter new todo..."
+        placeholder="What needs to be done?"
       ></input>
-      <button>Add Todo</button>
+      {/* <button>Add Todo</button> */}
     </form>
   );
 }

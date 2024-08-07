@@ -5,6 +5,7 @@ import Input from "./Input";
 import Footer from "./Footer";
 import { useTodos } from "./useTodos";
 import { useMemo } from "react";
+import "./index.css";
 
 function App() {
   const [currentTodo, setCurrentTodo] = useState("");
@@ -19,6 +20,7 @@ function App() {
     onClearAllTodo,
   } = useTodos();
 
+  const pendingTodoCount = todoList.filter((todo) => !todo.checked).length;
   const calculateFilteredTodos = () => {
     if (filter === "completed") {
       return todoList.filter((todo) => todo.checked);
@@ -37,25 +39,33 @@ function App() {
 
   const filteredTodos = useMemo(calculateFilteredTodos, [todoList, filter]);
   return (
-    <div className="App">
-      <Input
-        currentTodo={currentTodo}
-        onCurrentTodoChanged={setCurrentTodo}
-        onAddTodo={() => {
-          onAddTodo(currentTodo);
-          setCurrentTodo("");
-        }}
-      />
-      <MemoizedTodoList
-        todos={filteredTodos}
-        onDeleteTodo={onDeleteTodo}
-        onUpdateTodo={onUpdateTodo}
-      />
-      <Filter filter={filter} setFilter={setFilter} />
-      <Footer
-        onClearCompletedTodo={onClearCompletedTodo}
-        onClearAllTodo={onClearAllTodo}
-      />
+    <div className="app">
+      <div className="header">TODOS</div>
+      <div className="main">
+        <Input
+          currentTodo={currentTodo}
+          onCurrentTodoChanged={setCurrentTodo}
+          onAddTodo={() => {
+            onAddTodo(currentTodo);
+            setCurrentTodo("");
+          }}
+        />
+        <MemoizedTodoList
+          todos={filteredTodos}
+          onDeleteTodo={onDeleteTodo}
+          onUpdateTodo={onUpdateTodo}
+        />
+      </div>
+      {todoList.length > 0 && (
+        <div className="footer">
+          <div>{pendingTodoCount} items left!</div>
+          <Filter filter={filter} setFilter={setFilter} />
+          <Footer
+            onClearCompletedTodo={onClearCompletedTodo}
+            onClearAllTodo={onClearAllTodo}
+          />
+        </div>
+      )}
     </div>
   );
 }

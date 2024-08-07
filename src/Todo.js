@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, memo } from "react";
 import { useEnter } from "./useEnter";
+import "./index.css";
 
 const delay = (milliSeconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliSeconds));
@@ -9,6 +10,7 @@ export const MemoizedTodo = memo(Todo);
 
 export default function Todo({ todo, onDeleteTodo, onUpdateTodo }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [hovering, setHovering] = useState(false);
   // const [currentDeleteTime, setCurrentDeleteTime] = useState(5);
 
   // console.log(`Rendering todo: ${todo.name}`);
@@ -25,7 +27,11 @@ export default function Todo({ todo, onDeleteTodo, onUpdateTodo }) {
   // }, [todo, currentDeleteTime]);
 
   return (
-    <li>
+    <li
+      className="todo"
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+    >
       {isEditing ? (
         <EditingTodo
           todo={todo}
@@ -36,17 +42,13 @@ export default function Todo({ todo, onDeleteTodo, onUpdateTodo }) {
           }}
         />
       ) : (
-        <>
-          <DisplayTodo todo={todo} onUpdateTodo={onUpdateTodo} />
-          {todo.checked ? (
-            <>
-              <button onClick={() => onDeleteTodo(todo)}>Delete Todo</button>
-              {/* <span>Deleting in {currentDeleteTime} seconds...</span> */}
-            </>
-          ) : (
-            <button onClick={() => setIsEditing(true)}>Edit Todo</button>
-          )}
-        </>
+        <DisplayTodo
+          todo={todo}
+          hovering={hovering}
+          onUpdateTodo={onUpdateTodo}
+          onDeleteTodo={onDeleteTodo}
+          onEditMode={setIsEditing}
+        />
       )}
     </li>
   );
@@ -83,10 +85,21 @@ function EditingTodo({ todo, onEditTodo }) {
   );
 }
 
-function DisplayTodo({ todo, onUpdateTodo }) {
+function DisplayTodo({
+  todo,
+  hovering,
+  onUpdateTodo,
+  onDeleteTodo,
+  onEditMode,
+}) {
   return (
-    <>
+    <div
+      onDoubleClick={() => {
+        onEditMode(true);
+      }}
+    >
       <input
+        className="checkboxInput"
         type="checkbox"
         value={todo.checked}
         checked={todo.checked}
@@ -97,7 +110,12 @@ function DisplayTodo({ todo, onUpdateTodo }) {
       <span style={todo.checked ? { textDecoration: "line-through" } : {}}>
         {todo.name}
       </span>
-    </>
+      {hovering && (
+        <button className="deleteBtn" onClick={() => onDeleteTodo(todo)}>
+          X
+        </button>
+      )}
+    </div>
   );
 }
 
@@ -109,3 +127,29 @@ function DisplayTodo({ todo, onUpdateTodo }) {
 //     });
 //   }
 // }, [todo]);
+
+{
+  /* <li className="todo">
+      {isEditing ? (
+        <EditingTodo
+          todo={todo}
+          onEditTodo={(updatedValue) => {
+            if (updatedValue.trim() === "") return;
+            setIsEditing(false);
+            onUpdateTodo(todo.id, { ...todo, name: updatedValue });
+          }}
+        />
+      ) : (
+        <>
+          <DisplayTodo todo={todo} onUpdateTodo={onUpdateTodo} />
+          {todo.checked ? (
+            <button className="deleteBtn" onClick={() => onDeleteTodo(todo)}>
+              X
+            </button>
+          ) : (
+            <button onClick={() => setIsEditing(true)}>Edit Todo</button>
+          )}
+        </>
+      )}
+    </li> */
+}
